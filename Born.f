@@ -10,6 +10,15 @@ c Wrapper subroutine to call OL Born
       real * 8, intent(out) :: bmunu(0:3,0:3,nlegs)
 
       call openloops_born(p,bflav,born,bornjk,bmunu)
+
+      bornjk(1,1)=-2.0d0/9.0d0*born
+      bornjk(1,2)= 2.0d0/9.0d0*born
+      bornjk(2,1)= 2.0d0/9.0d0*born
+      bornjk(2,2)=-2.0d0/9.0d0*born
+!! Add also bornjk with charged lepton
+!! and depends on Z and W
+!! and depend on the flavour channel qq' or q'q
+      
       end subroutine setborn
 
       subroutine setbornonly(p,bflav,born)
