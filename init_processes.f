@@ -1,9 +1,11 @@
       subroutine init_processes
-      use openloops, only: set_parameter
+      use openloops, only: set_parameter, get_parameter
       implicit none
       include "nlegborn.h"
       include "pwhg_flst.h"
       include "pwhg_st.h"
+      include "pwhg_em.h"
+      include "PhysPars.h"
       include 'pwhg_ckm.h'
       include 'pwhg_physpar.h'
       include 'pwhg_res.h'
@@ -16,6 +18,8 @@
       flg_with_em = .true.
       flg_QEDonly = .true.
       pdf_nparton = 22
+
+      st_alpha = 100d0
       
       do i=1,maxprocreal
          int(i)=i
@@ -134,6 +138,12 @@ cccccccccccccccccccccccccOpenLoops Initcccccccccccccccccccccccccccccccccc
       call openloops_init
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
+!     Set alphaem
+      em_alpha = 7.5598868064660511d-3
+      ph_alphaem = em_alpha
+      print*, 'alpha OL= ', em_alpha
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+      
 
       end
 
@@ -223,71 +233,80 @@ c     set the number of final-state paricles at the Born-level WITHOUT any reson
         
            flst_nborn= 1 ! number of born flavour structures
 
-           flst_born(   1,   flst_nborn)=           1
-           flst_born(   2,   flst_nborn)=          -1
-           flst_born(   3,   flst_nborn)=         -11
-           flst_born(   4,   flst_nborn)=          11
-
-           flst_nborn = flst_nborn + 1
+c$$$           flst_born(   1,   flst_nborn)=           1
+c$$$           flst_born(   2,   flst_nborn)=          -1
+c$$$           flst_born(   3,   flst_nborn)=         -11
+c$$$           flst_born(   4,   flst_nborn)=          11
+c$$$
+c$$$           flst_nborn = flst_nborn + 1
+c$$$        
+c$$$           flst_born(   1,   flst_nborn)=          -1
+c$$$           flst_born(   2,   flst_nborn)=           1
+c$$$           flst_born(   3,   flst_nborn)=         -11
+c$$$           flst_born(   4,   flst_nborn)=          11
+c$$$
+c$$$           flst_nborn = flst_nborn + 1
+c$$$
+c$$$           flst_born(   1,   flst_nborn)=           2
+c$$$           flst_born(   2,   flst_nborn)=          -2
+c$$$           flst_born(   3,   flst_nborn)=         -11
+c$$$           flst_born(   4,   flst_nborn)=          11
+c$$$
+c$$$           flst_nborn = flst_nborn + 1
+c$$$        
+c$$$           flst_born(   1,   flst_nborn)=          -2
+c$$$           flst_born(   2,   flst_nborn)=           2
+c$$$           flst_born(   3,   flst_nborn)=         -11
+c$$$           flst_born(   4,   flst_nborn)=          11
+c$$$
+c$$$           flst_nborn = flst_nborn + 1
+c$$$           
+c$$$           flst_born(   1,   flst_nborn)=           3
+c$$$           flst_born(   2,   flst_nborn)=          -3
+c$$$           flst_born(   3,   flst_nborn)=         -11
+c$$$           flst_born(   4,   flst_nborn)=          11
+c$$$
+c$$$           flst_nborn = flst_nborn + 1
+c$$$        
+c$$$           flst_born(   1,   flst_nborn)=          -3
+c$$$           flst_born(   2,   flst_nborn)=           3
+c$$$           flst_born(   3,   flst_nborn)=         -11
+c$$$           flst_born(   4,   flst_nborn)=          11
+c$$$
+c$$$           flst_nborn = flst_nborn + 1
+c$$$
+c$$$           flst_born(   1,   flst_nborn)=           4
+c$$$           flst_born(   2,   flst_nborn)=          -4
+c$$$           flst_born(   3,   flst_nborn)=         -11
+c$$$           flst_born(   4,   flst_nborn)=          11
+c$$$
+c$$$           flst_nborn = flst_nborn + 1
+c$$$        
+c$$$           flst_born(   1,   flst_nborn)=          -4
+c$$$           flst_born(   2,   flst_nborn)=           4
+c$$$           flst_born(   3,   flst_nborn)=         -11
+c$$$           flst_born(   4,   flst_nborn)=          11
+c$$$
+c$$$           flst_nborn = flst_nborn + 1
+c$$$
+c$$$           flst_born(   1,   flst_nborn)=           5
+c$$$           flst_born(   2,   flst_nborn)=          -5
+c$$$           flst_born(   3,   flst_nborn)=         -11
+c$$$           flst_born(   4,   flst_nborn)=          11
+c$$$
+c$$$           flst_nborn = flst_nborn + 1
+c$$$        
+c$$$           flst_born(   1,   flst_nborn)=          -5
+c$$$           flst_born(   2,   flst_nborn)=           5
+c$$$           flst_born(   3,   flst_nborn)=         -11
+c$$$           flst_born(   4,   flst_nborn)=          11
+c$$$
+c$$$! adding aa           
+c$$$
+c$$$           flst_nborn = flst_nborn + 1
         
-           flst_born(   1,   flst_nborn)=          -1
-           flst_born(   2,   flst_nborn)=           1
-           flst_born(   3,   flst_nborn)=         -11
-           flst_born(   4,   flst_nborn)=          11
-
-           flst_nborn = flst_nborn + 1
-
-           flst_born(   1,   flst_nborn)=           2
-           flst_born(   2,   flst_nborn)=          -2
-           flst_born(   3,   flst_nborn)=         -11
-           flst_born(   4,   flst_nborn)=          11
-
-           flst_nborn = flst_nborn + 1
-        
-           flst_born(   1,   flst_nborn)=          -2
-           flst_born(   2,   flst_nborn)=           2
-           flst_born(   3,   flst_nborn)=         -11
-           flst_born(   4,   flst_nborn)=          11
-
-           flst_nborn = flst_nborn + 1
-           
-           flst_born(   1,   flst_nborn)=           3
-           flst_born(   2,   flst_nborn)=          -3
-           flst_born(   3,   flst_nborn)=         -11
-           flst_born(   4,   flst_nborn)=          11
-
-           flst_nborn = flst_nborn + 1
-        
-           flst_born(   1,   flst_nborn)=          -3
-           flst_born(   2,   flst_nborn)=           3
-           flst_born(   3,   flst_nborn)=         -11
-           flst_born(   4,   flst_nborn)=          11
-
-           flst_nborn = flst_nborn + 1
-
-           flst_born(   1,   flst_nborn)=           4
-           flst_born(   2,   flst_nborn)=          -4
-           flst_born(   3,   flst_nborn)=         -11
-           flst_born(   4,   flst_nborn)=          11
-
-           flst_nborn = flst_nborn + 1
-        
-           flst_born(   1,   flst_nborn)=          -4
-           flst_born(   2,   flst_nborn)=           4
-           flst_born(   3,   flst_nborn)=         -11
-           flst_born(   4,   flst_nborn)=          11
-
-           flst_nborn = flst_nborn + 1
-
-           flst_born(   1,   flst_nborn)=           5
-           flst_born(   2,   flst_nborn)=          -5
-           flst_born(   3,   flst_nborn)=         -11
-           flst_born(   4,   flst_nborn)=          11
-
-           flst_nborn = flst_nborn + 1
-        
-           flst_born(   1,   flst_nborn)=          -5
-           flst_born(   2,   flst_nborn)=           5
+           flst_born(   1,   flst_nborn)=          22 
+           flst_born(   2,   flst_nborn)=          22
            flst_born(   3,   flst_nborn)=         -11
            flst_born(   4,   flst_nborn)=          11
 
@@ -509,243 +528,253 @@ c     set the number of final-state paricles at the Born-level WITHOUT any reson
            
            flst_nreal= 1 ! number of born flavour structures
 
-           flst_real(   1,   flst_nreal)=          -2
-           flst_real(   2,   flst_nreal)=           2
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          22
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=           2
-           flst_real(   2,   flst_nreal)=          -2
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          22
-
-           flst_nreal = flst_nreal + 1
+c$$$           flst_real(   1,   flst_nreal)=          -2
+c$$$           flst_real(   2,   flst_nreal)=           2
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          22
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=           2
+c$$$           flst_real(   2,   flst_nreal)=          -2
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          22
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          22
+c$$$           flst_real(   2,   flst_nreal)=           2
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=           2
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=           2
+c$$$           flst_real(   2,   flst_nreal)=          22
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=           2
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          22
+c$$$           flst_real(   2,   flst_nreal)=          -2
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          -2
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          -2
+c$$$           flst_real(   2,   flst_nreal)=          22
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          -2
+c$$$
+c$$$           flst_nreal= flst_nreal + 1 ! number of born flavour structures
+c$$$
+c$$$           flst_real(   1,   flst_nreal)=          -1
+c$$$           flst_real(   2,   flst_nreal)=           1
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          22
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=           1
+c$$$           flst_real(   2,   flst_nreal)=          -1
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          22
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          22
+c$$$           flst_real(   2,   flst_nreal)=           1
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=           1
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=           1
+c$$$           flst_real(   2,   flst_nreal)=          22
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=           1
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          22
+c$$$           flst_real(   2,   flst_nreal)=          -1
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          -1
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          -1
+c$$$           flst_real(   2,   flst_nreal)=          22
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          -1
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$
+c$$$           flst_real(   1,   flst_nreal)=          -4
+c$$$           flst_real(   2,   flst_nreal)=           4
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          22
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=           4
+c$$$           flst_real(   2,   flst_nreal)=          -4
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          22
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          22
+c$$$           flst_real(   2,   flst_nreal)=           4
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=           4
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=           4
+c$$$           flst_real(   2,   flst_nreal)=          22
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=           4
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          22
+c$$$           flst_real(   2,   flst_nreal)=          -4
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          -4
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          -4
+c$$$           flst_real(   2,   flst_nreal)=          22
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          -4
+c$$$
+c$$$           flst_nreal= flst_nreal + 1 ! number of born flavour structures
+c$$$
+c$$$           flst_real(   1,   flst_nreal)=          -3
+c$$$           flst_real(   2,   flst_nreal)=           3
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          22
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=           3
+c$$$           flst_real(   2,   flst_nreal)=          -3
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          22
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          22
+c$$$           flst_real(   2,   flst_nreal)=           3
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=           3
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=           3
+c$$$           flst_real(   2,   flst_nreal)=          22
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=           3
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          22
+c$$$           flst_real(   2,   flst_nreal)=          -3
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          -3
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          -3
+c$$$           flst_real(   2,   flst_nreal)=          22
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          -3
+c$$$
+c$$$           flst_nreal= flst_nreal + 1 ! number of born flavour structures
+c$$$
+c$$$           flst_real(   1,   flst_nreal)=          -5
+c$$$           flst_real(   2,   flst_nreal)=           5
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          22
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=           5
+c$$$           flst_real(   2,   flst_nreal)=          -5
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          22
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          22
+c$$$           flst_real(   2,   flst_nreal)=           5
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=           5
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=           5
+c$$$           flst_real(   2,   flst_nreal)=          22
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=           5
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          22
+c$$$           flst_real(   2,   flst_nreal)=          -5
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          -5
+c$$$
+c$$$           flst_nreal = flst_nreal + 1
+c$$$        
+c$$$           flst_real(   1,   flst_nreal)=          -5
+c$$$           flst_real(   2,   flst_nreal)=          22
+c$$$           flst_real(   3,   flst_nreal)=          11
+c$$$           flst_real(   4,   flst_nreal)=         -11
+c$$$           flst_real(   5,   flst_nreal)=          -5
+c$$$
+c$$$
+c$$$           ! added aa
+c$$$           flst_nreal = flst_nreal + 1
         
            flst_real(   1,   flst_nreal)=          22
-           flst_real(   2,   flst_nreal)=           2
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=           2
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=           2
            flst_real(   2,   flst_nreal)=          22
            flst_real(   3,   flst_nreal)=          11
            flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=           2
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          22
-           flst_real(   2,   flst_nreal)=          -2
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          -2
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          -2
-           flst_real(   2,   flst_nreal)=          22
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          -2
-
-           flst_nreal= flst_nreal + 1 ! number of born flavour structures
-
-           flst_real(   1,   flst_nreal)=          -1
-           flst_real(   2,   flst_nreal)=           1
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          22
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=           1
-           flst_real(   2,   flst_nreal)=          -1
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          22
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          22
-           flst_real(   2,   flst_nreal)=           1
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=           1
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=           1
-           flst_real(   2,   flst_nreal)=          22
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=           1
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          22
-           flst_real(   2,   flst_nreal)=          -1
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          -1
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          -1
-           flst_real(   2,   flst_nreal)=          22
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          -1
-
-           flst_nreal = flst_nreal + 1
-
-           flst_real(   1,   flst_nreal)=          -4
-           flst_real(   2,   flst_nreal)=           4
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          22
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=           4
-           flst_real(   2,   flst_nreal)=          -4
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          22
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          22
-           flst_real(   2,   flst_nreal)=           4
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=           4
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=           4
-           flst_real(   2,   flst_nreal)=          22
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=           4
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          22
-           flst_real(   2,   flst_nreal)=          -4
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          -4
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          -4
-           flst_real(   2,   flst_nreal)=          22
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          -4
-
-           flst_nreal= flst_nreal + 1 ! number of born flavour structures
-
-           flst_real(   1,   flst_nreal)=          -3
-           flst_real(   2,   flst_nreal)=           3
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          22
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=           3
-           flst_real(   2,   flst_nreal)=          -3
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          22
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          22
-           flst_real(   2,   flst_nreal)=           3
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=           3
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=           3
-           flst_real(   2,   flst_nreal)=          22
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=           3
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          22
-           flst_real(   2,   flst_nreal)=          -3
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          -3
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          -3
-           flst_real(   2,   flst_nreal)=          22
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          -3
-
-           flst_nreal= flst_nreal + 1 ! number of born flavour structures
-
-           flst_real(   1,   flst_nreal)=          -5
-           flst_real(   2,   flst_nreal)=           5
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          22
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=           5
-           flst_real(   2,   flst_nreal)=          -5
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          22
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          22
-           flst_real(   2,   flst_nreal)=           5
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=           5
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=           5
-           flst_real(   2,   flst_nreal)=          22
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=           5
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          22
-           flst_real(   2,   flst_nreal)=          -5
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          -5
-
-           flst_nreal = flst_nreal + 1
-        
-           flst_real(   1,   flst_nreal)=          -5
-           flst_real(   2,   flst_nreal)=          22
-           flst_real(   3,   flst_nreal)=          11
-           flst_real(   4,   flst_nreal)=         -11
-           flst_real(   5,   flst_nreal)=          -5
+           flst_real(   5,   flst_nreal)=          22           
 
            
         endif

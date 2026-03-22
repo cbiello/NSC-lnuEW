@@ -44,6 +44,7 @@
      &                         tree_colbasis_dim, tree_colourflow
           implicit none
           integer, intent(in) :: flav(:)
+          integer :: modflav(4)
           integer, intent(in) :: amptype
           integer, intent(in), optional :: nflav
           integer, intent(out), optional :: intid
@@ -72,8 +73,18 @@
           end if
 
 ! register unknown process
-!          print*,"entering register ...",flav,amptype
-          register =  register_process(flav,amptype)
+c          print*,"entering register ...",flav
+c          print*,"amptype=", amptype
+c          print*, 'flav(0)= ', flav(1), ' flav(1)=', flav(2)
+          if(flav(1).eq.22.and.flav(2).eq.22.and.amptype.gt.1) then
+             modflav(1)=-2002
+             modflav(2)=-2002
+             modflav(3)=flav(3)
+             modflav(4)=flav(4)
+             register =  register_process(modflav,amptype)
+          else
+             register =  register_process(flav,amptype)
+          endif
 !          print*,"register",register
           if ( register < 0 ) then
             print*, "[POWHEG-BOX+OpenLoops] Process not found!"
@@ -112,6 +123,7 @@
           use ol_parameters_decl_dp, only: gQCD, pi
           implicit none
           include 'pwhg_st.h'
+          include 'pwhg_em.h'
           double precision,intent(in) :: p(:,:)
           integer,intent(in) :: bflav(:)
           double precision,intent(out) :: born
@@ -159,15 +171,15 @@ c     call set_parameter("alphas", st_alpha) !alpha_qcd
           use openloops, only: evaluate_tree
           implicit none
           include 'pwhg_st.h'
+          include 'pwhg_em.h'
           include 'pwhg_math.h'
           double precision, intent(in) :: p(:,:)
           integer, intent(in) :: rflav(:)
           double precision, intent(out) :: amp2real
           integer id
           id = register(rflav,1)
-          call set_parameter("alpha_qcd", st_alpha)   !alpha_qcd
           call evaluate_tree(id, p, amp2real)
-          amp2real=amp2real/(st_alpha/(2d0*pi))
+          amp2real=amp2real/(em_alpha/(2d0*pi))
         end subroutine openloops_real
 
 ! Virtual
@@ -176,6 +188,7 @@ c     call set_parameter("alphas", st_alpha) !alpha_qcd
           use ol_loop_parameters_decl_dp, only: nf        
           implicit none
           include 'pwhg_st.h'
+          include 'pwhg_em.h'
           include 'pwhg_math.h'
           double precision, intent(in) ::  p(:,:)
           integer, intent(in) :: vflav(:)
@@ -184,10 +197,13 @@ c     call set_parameter("alphas", st_alpha) !alpha_qcd
           double precision :: m2L0, m2L1(0:2), acc
           integer :: id,j
           id = register(vflav,11,nf)
-          call set_parameter("alpha_qcd", st_alpha)   ! alpha_qcd
-          call set_parameter("mu", sqrt(st_muren2)) ! renormalization scale
+c          call set_parameter("mu", sqrt(st_muren2)) ! renormalization scale
           call evaluate_loop(id, p, m2L0, m2L1, acc)
-          virtual = m2L1(0)/(st_alpha/(2.*pi))
+c          print*, 'm2L1= ', m2L1
+c          print*, 'm2L1(0)= ', m2L1(0)
+c          stop
+          
+          virtual = m2L1(0)/(em_alpha/(2.*pi))
           if (present(born)) born = m2L0
         end subroutine openloops_virtual
 
@@ -201,7 +217,6 @@ c     call set_parameter("alphas", st_alpha) !alpha_qcd
           double precision,intent(out) :: res
           integer :: id
           id = register(flav,1)
-          call set_parameter("alpha_qcd", st_alpha)   !alpha_qcd
           call evaluate_tree(id, p, res)
         end subroutine openloops_tree
 

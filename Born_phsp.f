@@ -47,6 +47,9 @@ c generate Born phase space from resoance information
 c Needed to avoid the photon pole in the Vcharge=0 run
          q2min=powheginput("qmin")**2         
          if(kn_sborn .lt. q2min) kn_jacborn=0d0
+
+         if(sqrt(kn_pborn(1,3)**2+kn_pborn(2,3)**2).lt.20d0) kn_jacborn=0d0
+         
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
          
          kn_minmass = 0d0

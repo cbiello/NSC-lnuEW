@@ -101,7 +101,8 @@ c     We make it the default, at least when minnlo is used.
         wwidth=powheginput('#wwidth')
         if(wwidth<0d0) wwidth=2.0854d0
         twidth = powheginput('#twidth')
-        if(twidth<0d0) twidth=1.442620d0
+c     if(twidth<0d0) twidth=1.442620d0
+        twidth=0d0
         hwidth=powheginput('#hwidth')
         if(hwidth<0d0) hwidth=0.407d-2
 
